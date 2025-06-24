@@ -15,17 +15,17 @@
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
-    // 1. Create map
+    // 1. Create map centered on Dhaka
     var map = L.map('map').setView([23.8103, 90.4125], 13);
 
-    // 2. Add base tile layer
+    // 2. Add OpenStreetMap tile layer
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
       attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    // 3. Load and add GeoJSON layer
-    fetch('data/Project_Boundary.geojson')
+    // 3. Load Project Boundary GeoJSON
+    fetch('Project_Boundary.geojson')
       .then(res => res.json())
       .then(data => {
         L.geoJSON(data, {
@@ -39,7 +39,25 @@
             layer.bindPopup("Project Area");
           }
         }).addTo(map);
-      });
+      })
+      .catch(err => console.error("Error loading Project_Boundary.geojson:", err));
+
+    // 4. Load Proposed Road GeoJSON
+    fetch('Proposed_Road_3_NCC.geojson')
+      .then(res => res.json())
+      .then(data => {
+        L.geoJSON(data, {
+          style: {
+            color: 'blue',
+            weight: 3,
+            dashArray: '5,5'
+          },
+          onEachFeature: function (feature, layer) {
+            layer.bindPopup("Proposed Road");
+          }
+        }).addTo(map);
+      })
+      .catch(err => console.error("Error loading Proposed_Road_3_NCC.geojson:", err));
   </script>
 </body>
 </html>
