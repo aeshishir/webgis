@@ -28,17 +28,12 @@
     fetch('Project_Boundary.geojson')
       .then(res => res.json())
       .then(data => {
-        L.geoJSON(data, {
-          style: {
-            color: 'red',
-            weight: 2,
-            fillColor: '#f03',
-            fillOpacity: 0.3
-          },
-          onEachFeature: function (feature, layer) {
-            layer.bindPopup("Project Area");
-          }
+        console.log("Project Boundary data:", data);
+        var projectLayer = L.geoJSON(data, {
+          style: { color: 'red', weight: 2, fillColor: '#f03', fillOpacity: 0.3 },
+          onEachFeature: (feature, layer) => layer.bindPopup("Project Area")
         }).addTo(map);
+        map.fitBounds(projectLayer.getBounds());  // Zoom to project area
       })
       .catch(err => console.error("Error loading Project_Boundary.geojson:", err));
 
@@ -46,15 +41,10 @@
     fetch('Proposed_Road_3_NCC.geojson')
       .then(res => res.json())
       .then(data => {
+        console.log("Proposed Road data:", data);
         L.geoJSON(data, {
-          style: {
-            color: 'blue',
-            weight: 3,
-            dashArray: '5,5'
-          },
-          onEachFeature: function (feature, layer) {
-            layer.bindPopup("Proposed Road");
-          }
+          style: { color: 'blue', weight: 3, dashArray: '5,5' },
+          onEachFeature: (feature, layer) => layer.bindPopup("Proposed Road")
         }).addTo(map);
       })
       .catch(err => console.error("Error loading Proposed_Road_3_NCC.geojson:", err));
