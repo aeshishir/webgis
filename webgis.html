@@ -15,16 +15,16 @@
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
-    // 1. Initialize map first
+    // 1. Create map
     var map = L.map('map').setView([23.8103, 90.4125], 13);
 
-    // 2. Add basemap
+    // 2. Add base tile layer
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
       attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    // 3. Load GeoJSON
+    // 3. Load and add GeoJSON layer
     fetch('data/Project_Boundary.geojson')
       .then(res => res.json())
       .then(data => {
