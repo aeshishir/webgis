@@ -15,39 +15,39 @@
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
-    // 1. Create map centered on Dhaka
+    // Initialize map centered on Dhaka
     var map = L.map('map').setView([23.8103, 90.4125], 13);
 
-    // 2. Add OpenStreetMap tile layer
+    // Add OpenStreetMap tile layer
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
       attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    // 3. Load Project Boundary GeoJSON
-    fetch('Project_Boundary.geojson')
-      .then(res => res.json())
+    // Load Project Boundary GeoJSON
+    fetch('./Project_Boundary.geojson')
+      .then(res => {
+        if (!res.ok) throw new Error("GeoJSON file not found");
+        return res.json();
+      })
       .then(data => {
         console.log("Project Boundary data:", data);
         var projectLayer = L.geoJSON(data, {
-          style: { color: 'red', weight: 2, fillColor: '#f03', fillOpacity: 0.3 },
+          style: {
+            color: 'red',
+            weight: 2,
+            fillColor: '#f03',
+            fillOpacity: 0.3
+          },
           onEachFeature: (feature, layer) => layer.bindPopup("Project Area")
         }).addTo(map);
-        map.fitBounds(projectLayer.getBounds());  // Zoom to project area
-      })
-      .catch(err => console.error("Error loading Project_Boundary.geojson:", err));
 
-    // 4. Load Proposed Road GeoJSON
-    fetch('Proposed_Road_3_NCC.geojson')
-      .then(res => res.json())
-      .then(data => {
-        console.log("Proposed Road data:", data);
-        L.geoJSON(data, {
-          style: { color: 'blue', weight: 3, dashArray: '5,5' },
-          onEachFeature: (feature, layer) => layer.bindPopup("Proposed Road")
-        }).addTo(map);
+        map.fitBounds(projectLayer.getBounds()); // Zoom map to boundary
       })
-      .catch(err => console.error("Error loading Proposed_Road_3_NCC.geojson:", err));
+      .catch(err => {
+        console.error("Error loading Project_Boundary.geojson:", err);
+        alert("Failed to load Project_Boundary.geojson. Check console for details.");
+      });
   </script>
 </body>
 </html>
